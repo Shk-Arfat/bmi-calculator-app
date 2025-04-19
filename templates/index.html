@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Prediction App</h1>
+        <form method="POST">
+            <label>Gender:</label>
+            <select name="gender" required>
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+
+            <label>Age:</label>
+            <input type="number" name="age" required>
+
+            <label>Height (cm):</label>
+            <input type="number" name="height" step="0.1" required>
+
+            <label>Weight (kg):</label>
+            <input type="number" name="weight" step="0.1" required>
+
+            <button type="submit">Calculate BMI</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <p> Your calculated BMI: <strong>{{ result.bmi }}</strong></p>
+            <p> Based on BMI rules, you are: <strong>{{ result.rule_category }}</strong></p>
+            <p> Model Prediction: <strong>{{ result.model_prediction }}</strong></p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
