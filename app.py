@@ -3,9 +3,6 @@ import pickle
 import numpy as np
 import os
 
-
-
-
 app = Flask(__name__)
 
 # Load model and encoder
@@ -16,11 +13,15 @@ label_decoder = pickle.load(open('label_encoder.pkl', 'rb'))
 def index():
     result = ''
     bmi_value = None
+
     if request.method == 'POST':
-        gender = 1 if request.form['gender'] == 'Male' else 0
-        age = int(request.form['age'])
-        height = float(request.form['height'])  # cm
-        weight = float(request.form['weight'])  # kg
+        try:
+            gender = 1 if request.form['gender'] == 'Male' else 0
+            age = int(request.form['age'])
+            height = float(request.form['height'])  # cm
+            weight = float(request.form['weight'])  # kg
+        except ValueError:
+            return render_template('index.html', result="Invalid input")
 
         # Predict
         features = np.array([[gender, age, height, weight]])
@@ -28,10 +29,9 @@ def index():
         prediction = label_decoder.inverse_transform([prediction_encoded])[0]
 
         # Calculate BMI manually
-        height_m = height / 100  # convert cm to meters
+        height_m = height / 100
         bmi_value = weight / (height_m ** 2)
 
-        # Rule-based BMI category
         if bmi_value < 18.5:
             category = "Underweight"
         elif 18.5 <= bmi_value < 25:
